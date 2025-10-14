@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { eventDto, type EventDto } from "@/validations/event.dto";
 import { EVENT_STATUS } from "@/enums/event.enum";
@@ -26,12 +26,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function CreateEventForm() {
+export default function CreateEventForm({ onClose }: { onClose: () => void }) {
+  const queryClient = useQueryClient();
+
   const form = useForm({
     resolver: zodResolver(eventDto),
     defaultValues: {
       title: "",
       car_info: "",
+      ticket_price_cents: 10,
+      status: EVENT_STATUS.open,
     },
   });
 
@@ -39,22 +43,25 @@ export default function CreateEventForm() {
     mutationFn: createEvent,
     onSuccess: () => {
       toast.success("Event created successfully");
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      onClose();
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error.message || "Something went wrong");
+      toast.error("Failed to create event", {
+        description: error.message || "Something went wrong",
+      });
     },
   });
 
   const onSubmit = async (values: EventDto) => {
-    console.log(values);
     values.ticket_price_cents *= 100;
     await mutateAsync(values);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -62,7 +69,7 @@ export default function CreateEventForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Event title" {...field} />
+                <Input placeholder="Enter the event title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +82,11 @@ export default function CreateEventForm() {
             <FormItem>
               <FormLabel>Car Information</FormLabel>
               <FormControl>
-                <Textarea placeholder="Car information" className="resize-none" {...field} />
+                <Textarea
+                  placeholder="Give car information..."
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,11 +101,10 @@ export default function CreateEventForm() {
               <FormControl>
                 <Input
                   type="number"
-                  placeholder="Ticket price"
+                  placeholder="Enter the ticket price in USD (e.g., 10)"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "") onChange(undefined);
-                    else onChange(Number.parseInt(value, 10));
+                    const val = e.target.value;
+                    onChange(val === "" ? null : Number(val));
                   }}
                   {...fieldProps}
                 />
@@ -112,11 +122,10 @@ export default function CreateEventForm() {
               <FormControl>
                 <Input
                   type="number"
-                  placeholder="Total tickets"
+                  placeholder="Enter the number of total tickets"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "") onChange(undefined);
-                    else onChange(Number.parseInt(value, 10));
+                    const val = e.target.value;
+                    onChange(val === "" ? null : Number(val));
                   }}
                   {...fieldProps}
                 />
@@ -132,8 +141,8 @@ export default function CreateEventForm() {
             <FormItem>
               <FormLabel>Status</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
+                <Select defaultValue={EVENT_STATUS.open} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full capitalize">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>

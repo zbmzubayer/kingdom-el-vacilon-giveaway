@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios.config";
-import type { Event } from "@/types/event";
+import type { Event, EventWithTickets } from "@/types/event";
 import type { EventDto } from "@/validations/event.dto";
 
 export const createEvent = async (data: EventDto) => {
@@ -7,7 +7,7 @@ export const createEvent = async (data: EventDto) => {
 };
 
 export const getAllEvents = async () => {
-  return await axiosInstance.get<Event[]>("/event");
+  return await axiosInstance.get<EventWithTickets[]>("/event");
 };
 
 export const getEventById = async (id: string) => {

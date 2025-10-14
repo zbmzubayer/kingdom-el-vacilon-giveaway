@@ -1,3 +1,5 @@
+import type { Ticket } from "@/types/ticket";
+
 export type Event = {
   id: string;
   title: string;
@@ -8,4 +10,8 @@ export type Event = {
   winner_ticket_id: string | null;
   created_at: Date;
   updated_at: Date;
+};
+
+export type EventWithTickets = Event & {
+  tickets: Ticket[];
 };

@@ -1,3 +1,4 @@
+import { getAuthToken } from "@/lib/auth-token.util";
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -6,10 +7,10 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (request) => {
-    // const token = getAuthToken();
-    // if (token) {
-    //   request.headers["Authorization"] = `Bearer ${token}`;
-    // }
+    const token = getAuthToken();
+    if (token) {
+      request.headers["Authorization"] = `Bearer ${token}`;
+    }
     return request;
   },
   (error) => {

@@ -67,7 +67,7 @@ export default function UpdateEventForm({ event, onClose }: UpdateEventFormProps
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -105,9 +105,8 @@ export default function UpdateEventForm({ event, onClose }: UpdateEventFormProps
                   type="number"
                   placeholder="Ticket price"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "") onChange(undefined);
-                    else onChange(Number.parseInt(value, 10));
+                    const val = e.target.value;
+                    onChange(val === "" ? null : Number(val));
                   }}
                   {...fieldProps}
                 />
@@ -127,9 +126,8 @@ export default function UpdateEventForm({ event, onClose }: UpdateEventFormProps
                   type="number"
                   placeholder="Total tickets"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "") onChange(undefined);
-                    else onChange(Number.parseInt(value, 10));
+                    const val = e.target.value;
+                    onChange(val === "" ? null : Number(val));
                   }}
                   {...fieldProps}
                 />
@@ -146,7 +144,7 @@ export default function UpdateEventForm({ event, onClose }: UpdateEventFormProps
               <FormLabel>Status</FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full capitalize">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -165,7 +163,7 @@ export default function UpdateEventForm({ event, onClose }: UpdateEventFormProps
         <div className="flex justify-end">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting && <Spinner />}
-            Create Event
+            Save
           </Button>
         </div>
       </form>

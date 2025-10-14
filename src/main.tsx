@@ -5,13 +5,14 @@ import { TanstackQueryProvider } from "@/providers/TanstackQueryProvider.tsx";
 import { RouterProvider } from "react-router";
 import { router } from "@/routes/routes";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TanstackQueryProvider>
-      {/* <AuthProvider> */}
-      <RouterProvider router={router} />
-      {/* </AuthProvider> */}
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
       <Toaster richColors />
     </TanstackQueryProvider>
   </StrictMode>

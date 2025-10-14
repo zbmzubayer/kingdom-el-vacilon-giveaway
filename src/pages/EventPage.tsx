@@ -1,17 +1,8 @@
 import { Logout } from "@/components/auth/Logout";
-import CreateEventForm from "@/components/event/CreateEventForm";
+import { CreateEventDialog } from "@/components/event/CreateEventDialog";
 import { EventCard } from "@/components/event/EventCard";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { getAllEvents } from "@/services/event.service";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { PlusIcon } from "lucide-react";
 
 export function EventPage() {
   const { data } = useSuspenseQuery({
@@ -19,7 +10,6 @@ export function EventPage() {
     queryFn: getAllEvents,
   });
   const events = data?.data || [];
-  console.log(events);
 
   return (
     <>
@@ -30,19 +20,7 @@ export function EventPage() {
         </nav>
       </header>
       <div className="container py-3">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusIcon /> Create Event
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create a new event</DialogTitle>
-            </DialogHeader>
-            <CreateEventForm />
-          </DialogContent>
-        </Dialog>
+        <CreateEventDialog />
         <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {events.length ? (
             events.map((event) => <EventCard key={event.id} event={event} />)
