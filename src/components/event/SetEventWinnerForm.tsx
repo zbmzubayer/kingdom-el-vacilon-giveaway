@@ -92,7 +92,7 @@ export function SetEventWinnerForm({ event_id }: { event_id: string }) {
         <div className="flex justify-end">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting && <Spinner />}
-            Create Ticket
+            Confirm
           </Button>
         </div>
       </form>
