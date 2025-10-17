@@ -18,11 +18,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import type { EventWithTickets } from "@/types/event";
+import type { EventWithTicketCount } from "@/types/event";
 import { EditIcon } from "lucide-react";
 import { useState } from "react";
 
-export function EventCard({ event }: { event: EventWithTickets }) {
+export function EventCard({ event }: { event: EventWithTicketCount }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,7 +58,7 @@ export function EventCard({ event }: { event: EventWithTickets }) {
         </div>
         <div className="flex items-center text-sm">
           <p className="w-32 font-medium">Ticket Sold</p>
-          <p className="tabular-nums">{event.tickets.length}</p>
+          <p className="tabular-nums">{event._count.tickets}</p>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between text-sm">

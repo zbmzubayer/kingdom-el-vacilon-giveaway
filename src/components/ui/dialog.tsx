@@ -2,6 +2,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { createContext, useContext, useState } from "react";
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -110,6 +111,32 @@ function DialogDescription({
   );
 }
 
+interface DialogContextValue {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const DialogContext = createContext<DialogContextValue | null>(null);
+
+const useDialog = () => {
+  const context = useContext(DialogContext);
+  if (!context) {
+    throw new Error("useDialog must be used within a DialogProvider");
+  }
+  const { open, setOpen } = context;
+  return { open, setOpen };
+};
+
+function DialogProvider({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <DialogContext.Provider value={{ open, setOpen }}>
+      <Dialog onOpenChange={setOpen} open={open} {...props} />
+    </DialogContext.Provider>
+  );
+}
+
 export {
   Dialog,
   DialogClose,
@@ -121,4 +148,6 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  useDialog,
+  DialogProvider,
 };

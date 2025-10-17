@@ -1,5 +1,3 @@
-import type { Ticket } from "@/types/ticket";
-
 export type Event = {
   id: string;
   title: string;
@@ -12,6 +10,8 @@ export type Event = {
   updated_at: Date;
 };
 
-export type EventWithTickets = Event & {
-  tickets: Ticket[];
+export type EventWithTicketCount = Event & {
+  _count: {
+    tickets: number;
+  };
 };

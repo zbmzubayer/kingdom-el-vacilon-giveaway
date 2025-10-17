@@ -10,3 +10,10 @@ export const eventDto = z.object({
 });
 
 export type EventDto = z.infer<typeof eventDto>;
+
+export const setEventWinnerDto = z.object({
+  serial_number: z.number("Required").int().positive(),
+  performed_by: z.string().optional(),
+});
+
+export type SetEventWinnerDto = z.infer<typeof setEventWinnerDto>;

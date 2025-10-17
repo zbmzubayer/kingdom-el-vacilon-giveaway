@@ -1,20 +1,24 @@
 import { EventTicketExportExcel } from "@/components/event/EventTicketExportExcel";
+import { SetEventWinnerForm } from "@/components/event/SetEventWinnerForm";
+import { CreateTicketCountForm } from "@/components/ticket/CreateTicketCountForm";
+import { CreateTicketForm } from "@/components/ticket/CreateTicketForm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogProvider,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getEventEmbedCodeById } from "@/services/event.service";
-import type { EventWithTickets } from "@/types/event";
+import type { EventWithTicketCount } from "@/types/event";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { CheckIcon, CopyIcon, EyeIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, CrownIcon, EyeIcon, TicketsPlaneIcon } from "lucide-react";
 import { useState } from "react";
 
-export function EventDetailsDialog({ event }: { event: EventWithTickets }) {
+export function EventDetailsDialog({ event }: { event: EventWithTicketCount }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,7 +38,7 @@ export function EventDetailsDialog({ event }: { event: EventWithTickets }) {
   );
 }
 
-function EventDetailsDialogContent({ event }: { event: EventWithTickets }) {
+function EventDetailsDialogContent({ event }: { event: EventWithTicketCount }) {
   const { data } = useSuspenseQuery({
     queryKey: ["event-embed", event.id],
     queryFn: () => getEventEmbedCodeById(event.id),
@@ -59,8 +63,57 @@ function EventDetailsDialogContent({ event }: { event: EventWithTickets }) {
         </pre>
       </div>
 
-      <div className="mt-5">
-        <EventTicketExportExcel tickets={event.tickets} />
+      <div className="mt-5 flex items-center gap-3">
+        <EventTicketExportExcel eventId={event.id} />
+        <DialogProvider>
+          <DialogTrigger>
+            <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
+              <TicketsPlaneIcon className="" />
+              Create Ticket
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Ticket</DialogTitle>
+              <DialogDescription>
+                Create tickets by providing the buyer information.
+              </DialogDescription>
+            </DialogHeader>
+            <CreateTicketForm event_id={event.id} />
+          </DialogContent>
+        </DialogProvider>
+        <DialogProvider>
+          <DialogTrigger>
+            <Button size="sm" className="bg-sky-500 hover:bg-sky-600">
+              <TicketsPlaneIcon />
+              Create Ticket By Count
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Ticket By Count</DialogTitle>
+              <DialogDescription>
+                Create tickets by specifying the number of tickets to generate.
+              </DialogDescription>
+            </DialogHeader>
+            <CreateTicketCountForm event_id={event.id} />
+          </DialogContent>
+        </DialogProvider>
+        <DialogProvider>
+          <DialogTrigger>
+            <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600">
+              <CrownIcon />
+              Set Winner
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Set Winner</DialogTitle>
+              <DialogDescription>Specify the winner for the event.</DialogDescription>
+            </DialogHeader>
+            <SetEventWinnerForm event_id={event.id} />
+          </DialogContent>
+        </DialogProvider>
       </div>
     </>
   );

@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { setAuthToken } from "@/lib/auth-token.util";
 import { useAuth } from "@/hooks/useAuth";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LoginForm() {
   const { setIsAuthenticated } = useAuth();
@@ -63,7 +64,8 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting && <Spinner />}
           Login
         </Button>
       </form>
