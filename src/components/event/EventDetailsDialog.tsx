@@ -57,7 +57,7 @@ function EventDetailsDialogContent({ event }: { event: EventWithTicketCount }) {
 
       <div className="flex flex-col gap-1">
         <label className="font-medium">Embed Code</label>
-        <pre className="bg-muted relative rounded-md px-3 py-2 font-mono text-wrap">
+        <pre className="bg-muted relative h-40 overflow-auto rounded-md px-3 py-2 font-mono text-wrap">
           {data.data.html}
           <CopyTextButton text={data.data.html} />
         </pre>
